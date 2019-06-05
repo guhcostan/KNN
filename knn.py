@@ -4,34 +4,27 @@ import math
 from tabulate import tabulate
 
 
-# Retorna o maior valor entre 3 variavies
 def maior(a, b, c):
-    if (a >= b and a > c):
+    if a >= b and a > c:
         return a
-    elif (b >= c):
+    elif b >= c:
         return b
     else:
         return c
 
 
-# Calcula a distancia euclidiana entre 2 valores
-def calcDist(value1, value2):
-    # print value1,value2
+def calc_dist(value1, value2):
     return math.sqrt(((value1[0] - value2[0]) ** 2 + value1[1] - value2[1]) ** 2 + (value1[2] - value2[2]) ** 2 + (
-                value1[3] - value2[3]) ** 2)
+            value1[3] - value2[3]) ** 2)
 
 
-# Retorna uma lista com todas os valores do arquivo
-
-def readFile(fileName):
+def read_file(file_name):
     lista = []
-    file = open(fileName)
-    for lineNumber, line in enumerate(file):
+    file = open(file_name)
+    for lineNumber, linha in enumerate(file):
         number = lineNumber - 1
         if lineNumber > 0:
-            # Converte os valores de string pra float
-            # Último valor por causa do split pega o \n (ex: "Setosa"\n =: 'Setosa')
-            lista.append(line.split(','))
+            lista.append(linha.split(','))
             for i in range(0, 4):
                 lista[number][i] = float(lista[number][i])
             if 'Setosa' in lista[number][4]:
@@ -44,88 +37,83 @@ def readFile(fileName):
     return lista;
 
 
-# Retorna uma lista com os K menores distancias euclidianas da lista
-def searchKMenores(value, data, k):
-    menores = []
-    distances = []
+def search_k_menores(value, data, k_val):
+    smallers = []
 
-    while k > 0:
+    while k_val > 0:
         menor = 0
         for i in range(len(data)):
-            if ((i not in menores) and calcDist(value, data[menor]) > calcDist(value, data[i])):
+            if (i not in smallers) and calc_dist(value, data[menor]) > calc_dist(value, data[i]):
                 menor = i
-        k += -1
-        menores.append(menor)
-    return menores
+        k_val += -1
+        smallers.append(menor)
+    return smallers
 
 
-# classA = [classA-Correct, classB-incorrect, classC-incorrect]
-# Retorna a classe do objeto baseado nos menores valores
-def thisClass(menores, data):
-    countA = 0
-    countB = 0
-    countC = 0
-    for i in menores:
+def this_class(smallers_values, data):
+    count_a = 0
+    count_b = 0
+    count_c = 0
+    for i in smallers_values:
         if 'Setosa' in data[i][4]:
-            countA += 1
+            count_a += 1
         elif 'Versicolor' in data[i][4]:
-            countB += 1
+            count_b += 1
         else:
-            countC += 1
-    if maior(countA, countB, countC) == countA:
+            count_c += 1
+    if maior(count_a, count_b, count_c) == count_a:
         return 'Setosa'
-    elif maior(countA, countB, countC) == countB:
+    elif maior(count_a, count_b, count_c) == count_b:
         return 'Versicolor'
     else:
         return 'Virginica'
 
 
-def imprime(classA, classB, classC, k):
-    sumA = classA[1] + classA[2] + classA[3]
-    sumB = classB[1] + classB[2] + classB[3]
-    sumC = classC[1] + classC[2] + classC[3]
-    print('Matriz de confusão')
-    print(tabulate([classA, classB, classC], headers=[' ', 'Setosa', 'Versicolor', 'Virginica']))
+def imprime(class_a, class_b, class_c, k_value):
+    sumA = class_a[1] + class_a[2] + class_a[3]
+    sumB = class_b[1] + class_b[2] + class_b[3]
+    sumC = class_c[1] + class_c[2] + class_c[3]
+    print('Matrix of confusion')
+    print(tabulate([class_a, class_b, class_c], headers=[' ', 'Setosa', 'Versicolor', 'Virginica']))
     print('')
     print('')
-    print('Estatisticas para K =', k)
-    if (classA[1] > 0):
-        print('{:.2f}% das Setosas foram classificadas corretamente'.format((classA[1] * 100) / sumA))
-    if (classB[2] > 0):
-        print('{:.2f}% das Versicolors foram classificadas corretamente'.format((classB[2] * 100) / sumB))
-    if (classC[3] > 0):
-        print('{:.2f}% das Virginicas foram classificadas corretamente'.format((classC[3] * 100) / sumC))
+    print('Statistics for K =', k_value)
+    if class_a[1] > 0:
+        print('{:.2f}% of Setosas were classified correctly'.format((class_a[1] * 100) / sumA))
+    if class_b[2] > 0:
+        print('{:.2f}% das Versicolors were classified correctly'.format((class_b[2] * 100) / sumB))
+    if class_c[3] > 0:
+        print('{:.2f}% das Virginicas were classified correctly'.format((class_c[3] * 100) / sumC))
     print('')
 
-    if (classA[2] > 0):
-        print('{:.2f}% das Setosas foram classificadas como Versicolors'.format((classA[2] * 100) / sumA))
-    if (classB[1] > 0):
-        print('{:.2f}% das Versicolors foram classificadas como Setosas'.format((classB[1] * 100) / sumB))
-    if (classC[1] > 0):
-        print('{:.2f}% das Virginicas foram classificadas como Setosas'.format((classC[1] * 100) / sumC))
+    if class_a[2] > 0:
+        print('{:.2f}% of Setosas were classified as Versicolors'.format((class_a[2] * 100) / sumA))
+    if class_b[1] > 0:
+        print('{:.2f}% of Versicolors were classified as Setosas'.format((class_b[1] * 100) / sumB))
+    if class_c[1] > 0:
+        print('{:.2f}% of Virginicas were classified as Setosas'.format((class_c[1] * 100) / sumC))
 
     print('')
 
-    if (classA[3] > 0):
-        print('{:.2f}% das Setosas foram classificadas como Virginicas'.format((classA[3] * 100) / sumA))
-    if (classB[3] > 0):
-        print('{:.2f}% das Versicolors foram classificadas como Virginicas'.format((classB[3] * 100) / sumB))
-    if (classC[2] > 0):
-        print('{:.2f}% das Virginicas foram classificadas como Versicolors'.format((classC[2] * 100) / sumC))
+    if class_a[3] > 0:
+        print('{:.2f}% of Setosas were classified as Virginicas'.format((class_a[3] * 100) / sumA))
+    if class_b[3] > 0:
+        print('{:.2f}% of Versicolors were classified as Virginicas'.format((class_b[3] * 100) / sumB))
+    if class_c[2] > 0:
+        print('{:.2f}% of Virginicas were classified as Versicolors'.format((class_c[2] * 100) / sumC))
 
 
-# MAIN
-print('Digite o valor de K:')
+print('Enter the value of K:')
 k = int(input())
 menores = []
-treinamento = readFile('iris_treino.csv')
-teste = readFile('iris_test.csv')
+treinamento = read_file('iris_treino.csv')
+teste = read_file('iris_test.csv')
 setosa = ['Setosa', 0, 0, 0]
 versicolor = ['Versicolor', 0, 0, 0]
 virginica = ['Virginica', 0, 0, 0]
 for line, inst in enumerate(teste):
-    menores = searchKMenores(teste[line], treinamento, k)
-    classIris = thisClass(menores, treinamento)
+    menores = search_k_menores(teste[line], treinamento, k)
+    classIris = this_class(menores, treinamento)
 
     if inst[4] == 'Setosa':
         if classIris == 'Setosa':
@@ -148,4 +136,5 @@ for line, inst in enumerate(teste):
             virginica[2] += 1
         elif classIris == 'Virginica':
             virginica[3] += 1
+
 imprime(setosa, versicolor, virginica, k)
